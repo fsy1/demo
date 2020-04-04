@@ -1,0 +1,38 @@
+server:
+  port: 9003
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:7001/eureka/,http://localhost:7002/eureka/
+  instance:
+    prefer-ip-address: false    #显示真实ip
+    instance-id: zuul
+spring:
+  application:
+    name: consumer9002
+feign:
+   hystrix:
+       enabled: true
+   client:
+    config:
+      remote-service:           #服务名，填写default为所有服务
+        connectTimeout: 3000
+        readTimeout: 3000
+hystrix:
+  command:
+      default:
+        execution:
+          isolation:
+            thread:
+              timeoutInMilliseconds: 3000
+zuul:
+  routes:
+    user1:
+#    myUseraa.serviceId: provider8001
+      url: http://localhost:8001
+      Path: /user/**
+    user2:
+      url: http://localhost:8002
+      Path: /hello/**
+  ignored-services: "*"
+  prefix: "/services"
